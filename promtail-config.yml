@@ -1,0 +1,34 @@
+server: 
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /temp/positions.yaml
+
+clients: 
+  - url: http://172.18.0.1:3100/loki/api/v1/push # change
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - 172.18.0.1 # change
+    labels:
+      job: varlogs
+      __path__: /var/log/*log
+  
+  - targets:
+      - 172.18.0.1 # change
+    labels:
+      job: container
+      host: docker
+      __path__: /var/lib/docker/containers/*/*-json.log
+
+# scrape_configs:
+# - job_name: docker
+#   pipeline_stages:
+#     - docker: {}
+#   static_configs:
+#     - labels:
+#         job: docker
+#         __path__: /var/lib/docker/containers/*/*-json.log
