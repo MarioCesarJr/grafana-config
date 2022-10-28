@@ -1,0 +1,25 @@
+# The root route with all parameters, which are inherited by the child
+# routes if they are not overwritten.
+route:
+  receiver: 'send_email'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+  group_by: ['alertname']
+
+receivers:
+- name: 'send_email'
+  email_configs:
+    - to: 'email01@agcapital.com.br, email02@gmail.com'
+      from: email@gmail.com
+      smarthost: smtp.hostinger.com:465
+      auth_username: email@gmail.com
+      auth_password: pass
+      require_tls: false
+      
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
